@@ -71,7 +71,8 @@ public class Controller {
         PushMessage pushMessage = new PushMessage(userId, textMessage);
         push(pushMessage);
 
-        return new ResponseEntity<String>("Push message:"+textMsg+"\nsent to: "+userId, HttpStatus.OK);
+//        return new ResponseEntity<String>("Push message:"+textMsg+"\nsent to: "+userId, HttpStatus.OK);
+        return new ResponseEntity<String>("Pesan push berhasil dikirim!", HttpStatus.OK);
     }
 
     private void reply(ReplyMessage replyMessage) {
