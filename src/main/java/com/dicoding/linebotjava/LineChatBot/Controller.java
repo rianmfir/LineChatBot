@@ -3,6 +3,7 @@ package com.dicoding.linebotjava.LineChatBot;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.LineSignatureValidator;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+
 
 @RestController
 public class Controller {
@@ -49,8 +51,7 @@ public class Controller {
                     if (event instanceof MessageEvent) {
                         MessageEvent messageEvent = (MessageEvent) event;
                         TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
-                        replyText(messageEvent.getReplyToken(), "Hallo");
-//                                textMessageContent.getText());
+                        replyText(messageEvent.getReplyToken(), textMessageContent.getText());
                     }
             });
 
@@ -58,6 +59,26 @@ public class Controller {
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/pushmessage/{id}/{messsage}", method = RequestMethod.GET)
+    public ResponseEntity<String> pushmessahge(
+            @PathVariable("id") String userId,
+            @PathVariable("message") String textMsg
+    ){
+        TextMessage textMessage = new TextMessage(textMsg);
+        PushMessage pushMessage = new PushMessage(userId, textMessage);
+        push(pushMessage);
+
+        return  new ResponseEntity<String>("Push message:"+textMsg+"\nsent to: "+userId, HttpStatus.OK);
+    }
+
+    private void push(PushMessage pushMessage){
+        try {
+            lineMessagingClient.pushMessage(pushMessage).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 
