@@ -62,7 +62,7 @@ public class Controller {
         }
     }
 
-    @RequestMapping(value = "/pushmessage/{id}/{message}", method = RequestMethod.GET)
+    @RequestMapping(value = "/pushmessage", method = RequestMethod.GET)
     public ResponseEntity<String> pushmessahge(
             @PathVariable("id") String userId,
             @PathVariable("message") String textMsg
