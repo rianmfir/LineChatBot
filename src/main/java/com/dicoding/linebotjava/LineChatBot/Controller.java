@@ -36,9 +36,9 @@ public class Controller {
             @RequestBody String eventsPayload)
     {
         try {
-//            if (!lineSignatureValidator.validateSignature(eventsPayload.getBytes(), xLineSignature)) {
-//                throw new RuntimeException("Invalid Signature Validation");
-//            }
+            if (!lineSignatureValidator.validateSignature(eventsPayload.getBytes(), xLineSignature)) {
+                throw new RuntimeException("Invalid Signature Validation");
+            }
 
             // parsing event
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
@@ -49,7 +49,8 @@ public class Controller {
                     if (event instanceof MessageEvent) {
                         MessageEvent messageEvent = (MessageEvent) event;
                         TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
-                        replyText(messageEvent.getReplyToken(), textMessageContent.getText());
+                        replyText(messageEvent.getReplyToken(), "Hallo");
+//                                textMessageContent.getText());
                     }
             });
 
