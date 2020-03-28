@@ -106,7 +106,7 @@ public class Controller {
 
             return new ResponseEntity<String>("Hello, "+profileName, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
     }
 
     private void reply(ReplyMessage replyMessage) {
