@@ -94,9 +94,9 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/profil", method = RequestMethod.GET)
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ResponseEntity<String> profile() {
-        String userId = "rianmfir";
+        String userId = "U73c4dd42cd068496a28377ac7f061d5e";
         UserProfileResponse profile = getProfile(userId);
 
         if (profile != null) {
