@@ -3,6 +3,7 @@ package com.dicoding.linebotjava.LineChatBot;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.LineSignatureValidator;
+import com.linecorp.bot.model.Multicast;
 import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.Event;
@@ -11,6 +12,7 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.StickerMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
+import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 
@@ -75,6 +80,18 @@ public class Controller {
 //        return new ResponseEntity<String>("Pesan push berhasil dikirim!", HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/multicast", method = RequestMethod.GET)
+    public ResponseEntity<String> multicast() {
+        String[] userIdList = {
+                "U73c4dd42cd068496a28377ac7f061d5e"};
+        Set<String> listUsers = new HashSet<String>(Arrays.asList(userIdList));
+        if (listUsers.size() > 0) {
+            String textMsg = "Ini Pesan Multicast, Pesan Berhasil Dikirim";
+            sendMulticast(listUsers, textMsg);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     private void reply(ReplyMessage replyMessage) {
         try {
             lineMessagingClient.replyMessage(replyMessage).get();
@@ -102,4 +119,16 @@ public class Controller {
             throw new RuntimeException(e);
         }
     }
+
+    private void sendMulticast(Set<String> sourceUsers, String txtMessage) {
+        TextMessage message = new TextMessage(txtMessage);
+        Multicast multicast = new Multicast(sourceUsers, message);
+
+        try {
+            lineMessagingClient.multicast(multicast).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
