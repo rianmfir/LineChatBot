@@ -92,38 +92,39 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //    @RequestMapping(value = "/profile", method = RequestMethod.GET)
-//    public ResponseEntity<String> profile() {
-//        String userId = "U73c4dd42cd068496a28377ac7f061d5e";
-//        UserProfileResponse profile = getProfile(userId);
-//
-//        if (profile != null) {
-//            String profileName = profile.getDisplayName();
-//            TextMessage textMessage = new TextMessage("Hello, " +profileName);
-//            PushMessage pushMessage = new PushMessage(userId, textMessage);
-//            push(pushMessage);
-//
-//            return new ResponseEntity<String>("Hello, "+profileName, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
-//    }
-
-    @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
-    public void profile(
-            @PathVariable("id") String userId
-    ){
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public ResponseEntity<String> profile() {
+        String userId = "U73c4dd42cd068496a28377ac7f061d5e";
         UserProfileResponse profile = getProfile(userId);
 
         if (profile != null) {
             String profileName = profile.getDisplayName();
-            TextMessage textMessage = new TextMessage("Hello, " + profileName);
+            TextMessage textMessage = new TextMessage("Hello, " +profileName);
             PushMessage pushMessage = new PushMessage(userId, textMessage);
             push(pushMessage);
 
-            new ResponseEntity<String>("Hello, " + profileName, HttpStatus.OK);
+            return new ResponseEntity<String>("Hello, "+profileName, HttpStatus.OK);
         }
-        new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
     }
+
+
+//    @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
+//    public void profile(
+//            @PathVariable("id") String userId
+//    ){
+//        UserProfileResponse profile = getProfile(userId);
+//
+//        if (profile != null) {
+//            String profileName = profile.getDisplayName();
+//            TextMessage textMessage = new TextMessage("Hello, " + profileName);
+//            PushMessage pushMessage = new PushMessage(userId, textMessage);
+//            push(pushMessage);
+//
+//            new ResponseEntity<String>("Hello, " + profileName, HttpStatus.OK);
+//        }
+//        new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+//    }
 
     private void reply(ReplyMessage replyMessage) {
         try {
