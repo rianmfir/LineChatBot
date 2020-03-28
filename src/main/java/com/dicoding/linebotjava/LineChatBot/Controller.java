@@ -38,11 +38,10 @@ public class Controller {
     @Qualifier("lineSignatureValidator")
     private LineSignatureValidator lineSignatureValidator;
 
-    @RequestMapping(value="/webhook", method= RequestMethod.POST)
+    @RequestMapping(value = "/webhook", method = RequestMethod.POST)
     public ResponseEntity<String> callback(
             @RequestHeader("X-Line-Signature") String xLineSignature,
-            @RequestBody String eventsPayload)
-    {
+            @RequestBody String eventsPayload) {
         try {
             if (!lineSignatureValidator.validateSignature(eventsPayload.getBytes(), xLineSignature)) {
                 throw new RuntimeException("Invalid Signature Validation");
@@ -52,13 +51,13 @@ public class Controller {
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             EventsModel eventsModel = objectMapper.readValue(eventsPayload, EventsModel.class);
 
-            eventsModel.getEvents().forEach((event)->{
+            eventsModel.getEvents().forEach((event) -> {
                 // kode reply message disini
-                    if (event instanceof MessageEvent) {
-                        MessageEvent messageEvent = (MessageEvent) event;
-                        TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
-                        replyText(messageEvent.getReplyToken(), textMessageContent.getText());
-                    }
+                if (event instanceof MessageEvent) {
+                    MessageEvent messageEvent = (MessageEvent) event;
+                    TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
+                    replyText(messageEvent.getReplyToken(), textMessageContent.getText());
+                }
             });
 
             return new ResponseEntity<>(HttpStatus.OK);
@@ -72,12 +71,12 @@ public class Controller {
     public ResponseEntity<String> pushmessahge(
             @PathVariable("id") String userId,
             @PathVariable("message") String textMsg
-    ){
+    ) {
         TextMessage textMessage = new TextMessage(textMsg);
         PushMessage pushMessage = new PushMessage(userId, textMessage);
         push(pushMessage);
 
-        return new ResponseEntity<String>("Push message:"+textMsg+"\nsent to: "+userId, HttpStatus.OK);
+        return new ResponseEntity<String>("Push message:" + textMsg + "\nsent to: " + userId, HttpStatus.OK);
 //        return new ResponseEntity<String>("Pesan push berhasil dikirim!", HttpStatus.OK);
     }
 
@@ -93,20 +92,37 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public ResponseEntity<String> profile() {
-        String userId = "U73c4dd42cd068496a28377ac7f061d5e";
+    //    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+//    public ResponseEntity<String> profile() {
+//        String userId = "U73c4dd42cd068496a28377ac7f061d5e";
+//        UserProfileResponse profile = getProfile(userId);
+//
+//        if (profile != null) {
+//            String profileName = profile.getDisplayName();
+//            TextMessage textMessage = new TextMessage("Hello, " +profileName);
+//            PushMessage pushMessage = new PushMessage(userId, textMessage);
+//            push(pushMessage);
+//
+//            return new ResponseEntity<String>("Hello, "+profileName, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+//    }
+
+    @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
+    public void profile(
+            @PathVariable("id") String userId
+    ){
         UserProfileResponse profile = getProfile(userId);
 
         if (profile != null) {
             String profileName = profile.getDisplayName();
-            TextMessage textMessage = new TextMessage("Hello, " +profileName);
+            TextMessage textMessage = new TextMessage("Hello, " + profileName);
             PushMessage pushMessage = new PushMessage(userId, textMessage);
             push(pushMessage);
 
-            return new ResponseEntity<String>("Hello, "+profileName, HttpStatus.OK);
+            new ResponseEntity<String>("Hello, " + profileName, HttpStatus.OK);
         }
-        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        new ResponseEntity<String>(HttpStatus.NOT_FOUND);
     }
 
     private void reply(ReplyMessage replyMessage) {
@@ -118,18 +134,18 @@ public class Controller {
     }
 
     private void replyText(String replyToken, String messageToUser) {
-        TextMessage textMessage =  new TextMessage(messageToUser);
+        TextMessage textMessage = new TextMessage(messageToUser);
         ReplyMessage replyMessage = new ReplyMessage(replyToken, textMessage);
         reply(replyMessage);
     }
 
-    private void replySticker(String replyToken, String packageId, String stickerId){
+    private void replySticker(String replyToken, String packageId, String stickerId) {
         StickerMessage stickerMessage = new StickerMessage(packageId, stickerId);
         ReplyMessage replyMessage = new ReplyMessage(replyToken, stickerMessage);
         reply(replyMessage);
     }
 
-    private void push(PushMessage pushMessage){
+    private void push(PushMessage pushMessage) {
         try {
             lineMessagingClient.pushMessage(pushMessage).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -148,7 +164,7 @@ public class Controller {
         }
     }
 
-    private UserProfileResponse getProfile(String userId){
+    private UserProfileResponse getProfile(String userId) {
         try {
             return lineMessagingClient.getProfile(userId).get();
         } catch (InterruptedException | ExecutionException e) {
