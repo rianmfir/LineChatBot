@@ -94,14 +94,14 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    @RequestMapping(value = "/profil", method = RequestMethod.GET)
     public ResponseEntity<String> profile() {
         String userId = "rianmfir";
         UserProfileResponse profile = getProfile(userId);
 
         if (profile != null) {
             String profileName = profile.getDisplayName();
-            TextMessage textMessage = new TextMessage("Hello, " + profileName);
+            TextMessage textMessage = new TextMessage("Hello, " +profileName);
             PushMessage pushMessage = new PushMessage(userId, textMessage);
             push(pushMessage);
 
