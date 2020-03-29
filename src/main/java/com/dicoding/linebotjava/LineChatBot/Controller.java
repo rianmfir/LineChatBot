@@ -32,9 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
@@ -201,10 +199,31 @@ public class Controller {
         reply(replyMessage);
     }
 
-    private void replySticker(String replyToken, String packageId, String stickerId) {
-        StickerMessage stickerMessage = new StickerMessage(packageId, stickerId);
-        ReplyMessage replyMessage = new ReplyMessage(replyToken, stickerMessage);
+    private void replySticker(String replyToken) {
+//        StickerMessage stickerMessage = new StickerMessage(packageId, stickerId);
+//
+//        ReplyMessage replyMessage = new ReplyMessage(replyToken, stickerMessage);
+//        reply(replyMessage);
+
+//        StickerMessage stickerMessage = new StickerMessage(packageId, stickerId);
+        List<Message> msgArray = new ArrayList<>();
+        ReplyMessage replyMessage = new ReplyMessage(replyToken, msgArray);
+        msgArray.add(new StickerMessage("1", "106"));
         reply(replyMessage);
+
+        /*
+        StickerMessage stickerMessage = new StickerMessage(packageId, stickerId);
+        List<stickerMessage> msgArray = new ArrayList<>();
+        ReplyMessage replyMessage = new ReplyMessage(replyToken, msgArray);
+        msgArray.add(new StickerMessage("1", "106"));
+        reply(replyMessage);
+
+        List<Message> msgArray = new ArrayList<>();
+        msgArray.add(new TextMessage(textMessageContent.getText()));
+        msgArray.add(new StickerMessage("1", "106"));
+        ReplyMessage replyMessage = new ReplyMessage(event.getReplyToken(), msgArray);
+        reply(replyMessage);
+        * */
     }
 
     private void push(PushMessage pushMessage) {
@@ -252,7 +271,7 @@ public class Controller {
         } else if (event.getMessage() instanceof TextMessageContent) {
             handleTextMessage(event);
         } else if (event.getMessage() instanceof StickerMessageContent) {
-            replySticker(event.getReplyToken(),String.valueOf(1),String.valueOf(1));
+            replySticker(event.getReplyToken());
         } else{
             replyText(event.getReplyToken(), "Unknown Message");
         }
