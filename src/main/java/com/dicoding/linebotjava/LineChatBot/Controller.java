@@ -207,16 +207,12 @@ public class Controller {
 
 //        StickerMessage stickerMessage = new StickerMessage(packageId, stickerId);
         List<Message> msgArray = new ArrayList<>();
-        ReplyMessage replyMessage = new ReplyMessage(replyToken, msgArray);
         msgArray.add(new StickerMessage("1", "106"));
+        ReplyMessage replyMessage = new ReplyMessage(replyToken, msgArray);
         reply(replyMessage);
 
         /*
-        StickerMessage stickerMessage = new StickerMessage(packageId, stickerId);
-        List<stickerMessage> msgArray = new ArrayList<>();
-        ReplyMessage replyMessage = new ReplyMessage(replyToken, msgArray);
-        msgArray.add(new StickerMessage("1", "106"));
-        reply(replyMessage);
+
 
         List<Message> msgArray = new ArrayList<>();
         msgArray.add(new TextMessage(textMessageContent.getText()));
