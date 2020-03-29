@@ -251,7 +251,9 @@ public class Controller {
             handleContentMessage(event);
         } else if (event.getMessage() instanceof TextMessageContent) {
             handleTextMessage(event);
-        } else {
+        } else if (event.getMessage() instanceof StickerMessageContent) {
+            replySticker(event.getReplyToken(),String.valueOf(1),String.valueOf(1));
+        } else{
             replyText(event.getReplyToken(), "Unknown Message");
         }
     }
