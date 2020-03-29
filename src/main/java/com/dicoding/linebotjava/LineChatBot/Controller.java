@@ -18,7 +18,6 @@ import com.linecorp.bot.model.message.StickerMessage;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
 import com.linecorp.bot.model.profile.UserProfileResponse;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.InputStreamResource;
@@ -90,15 +89,16 @@ public class Controller {
 
             // Kode eventsModel di bawah ini digunakan pada materi group room api dan flex messages
             // Sesuaikan penggunaan dengan keterangan pada modul
-            eventsModel.getEvents().forEach((event) ->{
-                if (event instanceof MessageContent) {
-                    if (event.getSource() instanceof GroupSource || event.getSource() instanceof RoomSource){
-                        handleGroupRoomChats ((MessageEvent) event);
+            eventsModel.getEvents().forEach((event)->{
+                if (event instanceof MessageEvent) {
+                    if (event.getSource() instanceof GroupSource || event.getSource() instanceof RoomSource) {
+                        handleGroupRoomChats((MessageEvent) event);
                     } else {
 //                        handleOneOnOneChats((MessageEvent) event);
                     }
                 }
             });
+
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (
                 IOException e) {
@@ -248,7 +248,8 @@ public class Controller {
 //        ) {
 //            handleContentMessage(event);
 //        } else if(event.getMessage() instanceof TextMessageContent) {
-//            handleTextMessage(event);
+////            handleTextMessage(event);
+//            replyText(event.getReplyToken(), "Trial Error Message");
 //        } else {
 //            replyText(event.getReplyToken(), "Unknown Message");
 //        }
@@ -265,7 +266,7 @@ public class Controller {
     }
 
 //    private void handleContentMessage(MessageEvent event) {
-//        String baseURL     = "https://namaaplikasianda.herokuapp.com";
+//        String baseURL     = "https://linechatbot25.herokuapp.com";
 //        String contentURL  = baseURL+"/content/"+ event.getMessage().getId();
 //        String contentType = event.getMessage().getClass().getSimpleName();
 //        String textMsg     = contentType.substring(0, contentType.length() -14)
