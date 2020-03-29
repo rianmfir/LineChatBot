@@ -97,7 +97,7 @@ public class Controller {
                     if (event.getSource() instanceof GroupSource || event.getSource() instanceof RoomSource) {
                         handleGroupRoomChats((MessageEvent) event);
                     } else {
-//                        handleOneOnOneChats((MessageEvent) event);
+                        handleOneOnOneChats((MessageEvent) event);
                     }
                 }
             });
