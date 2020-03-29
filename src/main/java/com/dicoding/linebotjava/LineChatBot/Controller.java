@@ -252,7 +252,6 @@ public class Controller {
             handleContentMessage(event);
         } else if(event.getMessage() instanceof TextMessageContent) {
             handleTextMessage(event);
-            replyText(event.getReplyToken(), "Trial Error Message");
         } else {
             replyText(event.getReplyToken(), "Unknown Message");
         }
