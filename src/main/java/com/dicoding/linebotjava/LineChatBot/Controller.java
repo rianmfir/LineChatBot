@@ -92,7 +92,7 @@ public class Controller {
 
             // Kode eventsModel di bawah ini digunakan pada materi group room api dan flex messages
             // Sesuaikan penggunaan dengan keterangan pada modul
-            eventsModel.getEvents().forEach((event)->{
+            eventsModel.getEvents().forEach((event) -> {
                 if (event instanceof MessageEvent) {
                     if (event.getSource() instanceof GroupSource || event.getSource() instanceof RoomSource) {
                         handleGroupRoomChats((MessageEvent) event);
@@ -101,14 +101,13 @@ public class Controller {
                     }
                 }
             });
+            // Batas kode events model group room api dan flex messages
 
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (
-                IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @RequestMapping(value = "/pushmessage/{id}/{message}", method = RequestMethod.GET)
@@ -153,7 +152,7 @@ public class Controller {
     }
 
 
-//    @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
+    //    @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
 //    public void profile(
 //            @PathVariable("id") String userId
 //    ){
@@ -235,7 +234,7 @@ public class Controller {
         }
     }
 
-    private MessageContentResponse getContent(String messageId){
+    private MessageContentResponse getContent(String messageId) {
         try {
             return lineMessagingClient.getMessageContent(messageId).get();
         } catch (InterruptedException | ExecutionException e) {
@@ -244,13 +243,13 @@ public class Controller {
     }
 
     private void handleOneOnOneChats(MessageEvent event) {
-        if  (event.getMessage() instanceof AudioMessageContent
+        if (event.getMessage() instanceof AudioMessageContent
                 || event.getMessage() instanceof ImageMessageContent
                 || event.getMessage() instanceof VideoMessageContent
                 || event.getMessage() instanceof FileMessageContent
         ) {
             handleContentMessage(event);
-        } else if(event.getMessage() instanceof TextMessageContent) {
+        } else if (event.getMessage() instanceof TextMessageContent) {
             handleTextMessage(event);
         } else {
             replyText(event.getReplyToken(), "Unknown Message");
@@ -258,7 +257,7 @@ public class Controller {
     }
 
     private void handleGroupRoomChats(MessageEvent event) {
-        if(!event.getSource().getUserId().isEmpty()) {
+        if (!event.getSource().getUserId().isEmpty()) {
             String userId = event.getSource().getUserId();
             UserProfileResponse profile = getProfile(userId);
             replyText(event.getReplyToken(), "Hello, " + profile.getDisplayName());
@@ -272,10 +271,8 @@ public class Controller {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("flex_message.json"));
 
-
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
-
 
             ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Dicoding Academy", flexContainer));
             reply(replyMessage);
@@ -285,10 +282,10 @@ public class Controller {
     }
 
     private void handleContentMessage(MessageEvent event) {
-        String baseURL     = "https://linechatbot25.herokuapp.com";
-        String contentURL  = baseURL+"/content/"+ event.getMessage().getId();
+        String baseURL = "https://linechatbot25.herokuapp.com";
+        String contentURL = baseURL + "/content/" + event.getMessage().getId();
         String contentType = event.getMessage().getClass().getSimpleName();
-        String textMsg     = contentType.substring(0, contentType.length() -14)
+        String textMsg = contentType.substring(0, contentType.length() - 14)
                 + " yang kamu kirim bisa diakses dari link:\n "
                 + contentURL;
 
